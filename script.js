@@ -1,81 +1,115 @@
-const Gameboard = (rows, cols) => {
-
-    const getRows = () => rows;
-    const getCols = () => cols;
-    let row = 64
-    let col = 1
-
-    const board = [];
-    
-    for (let i=0; i<getRows(); i++) {
-       
-        board[i]=[];
-        row++
-       
-        for (let j=0; j<getCols(); j++){
-            board[i][j]= String.fromCharCode(row)+col
-           if(col=board[i].length){col++}else{col=1}
-            
-        }
+const Gameboard = (rows = 3, cols = 3) => {
+  const board = [];
+  for (let i = 0; i < rows; i++) {
+    board[i] = [];
+    for (let j = 0; j < cols; j++) {
+      board[i].push(Cell());
     }
+  }
+  const getBoard = () => board;
 
-    console.log(board[0][1])
+  const placeToken = (column, row, player) => {
+    if (board[row][column].getValue() === "-") {
+      board[row][column].addToken(player);
+    } else {
+      console.log(`That square has been played`);
+    }
+  };
+
+  const renderBoard = () => {
+    const boardWithCellValues = board.map((row) =>
+      row.map((cell) => cell.getValue())
+    );
+    console.log(boardWithCellValues);
+
+    return boardWithCellValues;
+  };
+
+  const getStringFromBoard = () => {
+    const board = renderBoard().flat().join("");
+
     return board;
+  };
+
+  return { getBoard, placeToken, renderBoard, getStringFromBoard };
+};
+
+function Cell() {
+  let value = "-";
+  const addToken = (player) => {
+    value = player.token;
+  };
+
+  const getValue = () => value;
+
+  return { addToken, getValue };
+}
+
+const Player = (name, token) => {
+
+   const playRound = (row, cell)=> gameboard(row, cell)
+
+  return { name, token, playRound };
+};
+
+
+
+const gameControl = (() => {
+  const gameboard = () => Gameboard(3, 3); //get the board
+  const player1 = Player("Player 1", "X");
+    const player2 = Player("Player 2", "0");
+
+  const playerArray = [player1, player2]; // establish the players in an array
+  let activePlayer = () => playerArray[1]; // active player is the first player
+
+  //If player1 is active, swap the active player to player2
+  const switchPlayers = () => {
+    if (activePlayer === playerArray[0]) {
+      activePlayer = playerArray[1];
+    } else {
+      activePlayer = playerArray[0];
     }
-            
-const gameboard = (() =>{
+    gameboard.renderBoard(); //Put the board on the screen
+
+    console.log(
+      `${activePlayer.name}'s turn. Place your '${activePlayer.token}'`
+    ); //Tell the player it's their turn
+    return activePlayer;
+  };
+
  
- return Gameboard(3,3)
-})()
 
-
-const Player = (name, token)  => {
+  const gameOver = () => {
     
-    return {name, token}
+    const winnerX =() => [/XXX....../g,/...XXX.../,/......XXX/g, /X..X..X../g, /.X..X..X/g,/..X..X..X/g,/X...X.X../g,/..X.X...X/g]
+    const winner0 = () => [/000....../g,/...000.../,/......000/g, /0..0..0../g, /.0..0..0/g,/..0..0..0/g,/0...0.0../g,/..0.0...0/g]
 
-
-    // let players = [];
-    // let turns = 0;
-    
-   
-    // if (!players[0]){
-    //     const playerNum = 1
-    //     const token = "X"
+    if(winnerX.includes(gameboard.getStringFromBoard())) {
+        console.log(`${player1.name} wins!`)
         
-    //     return {name, turns, playerNum, token}
-    // } else if (!players[1]) {
-    //     const playerNum = 2
-    //     const token = "0"
-    //     let turns = 0;
-    //     return {name, turns, playerNum, token}
-    // } else if (players[1]) {
-    //     console.log("Maximum players has been reached")
+    } else if (winner0.includes(gameboard.getStringFromBoard())) {
+        console.log(`${player2.name} wins`)
+        
+    } else console.log('Next round')
+        
+    return {winnerX, winner0}
 
-    // }
-    
-    }
+  }
 
+  //    gameboard.renderBoard();//Put the board on the screen
+  //     console.log(`${activePlayer.name}'s turn. Place your '${activePlayer.token}'`)//Tell the player it's their turn
+  const gameRound = () => {
+    
+    activePlayer.playRound
+    gameboard.renderBoard;
+    
 
-    
-    
+    switchPlayers();
+  };
 
-const Gameplay = (() => {
+  return {gameboard, activePlayer, gameOver, gameRound};
 
-    const player1 =  Player("Player1", "X")
-    
-    const player2 = Player("Player2", "0")
-    
-    console.log(`${player1.name} is using ${player1.token}`)
-    console.log(`${player2.name} is using ${player2.token}`)
-    
+  //player puts token on board - selects row and column (how does the player do this?)
+
+  //If the space is free, the token goes into that cell
 })();
-
-
-
-function getArrayIndexOfGameCell(){
-
-} 
-    
-
-    
- 
