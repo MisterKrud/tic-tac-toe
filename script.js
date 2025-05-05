@@ -25,13 +25,8 @@ const Gameboard = (rows = 3, cols = 3) => {
     return boardWithCellValues;
   };
 
-  const getStringFromBoard = () => {
-    const board = renderBoard().flat().join("");
-
-    return board;
-  };
-
-  return {getBoard, placeToken, renderBoard, getStringFromBoard};
+  
+  return {getBoard, placeToken, renderBoard};
 };
 
 
@@ -134,7 +129,7 @@ const gameControl = () => {
 
    
       if (allLines.some( (arr) => arr.every((value) => value === player1.token || value === player2.token))) {
-        console.log('Game Over')
+        console.log(`${getActivePlayer().token} wins. Well done ${getActivePlayer().name}!`)
       }
 
   }
@@ -153,7 +148,16 @@ const gameControl = () => {
 // const gameRound1 = (() => {
     
 //    const control = gameControl();
-//    console.log(`${control.getActivePlayer()}'s turn. Place your ${getActivePlayer().token}.`)
+//    const screen = screenControl();
+//    screen.renderDivs();
+//    screen.playMessage();
+//    screen.clickListener();
+//    control.gameOver();
+   
+   
+
+   
+  
    
 
 //   })();
@@ -166,3 +170,50 @@ const gameControl = () => {
 //     gameRound1();
 
 // }
+
+const screenControl = (() => {
+const control = gameControl();
+const boardDiv = document.querySelector(".board")
+const messageScreen = document.getElementById("messages");
+const playMessage = () => `${control.getActivePlayer().name}'s turn. Place your ${control.getActivePlayer().token}.`
+  messageScreen.textContent= playMessage();
+const board = control.gameboard
+
+  
+const renderDivs = (() => {
+  
+for (let i = 0; i<board.getBoard().length; i++){
+  let divRow = document.createElement("div")
+  divRow.setAttribute("class","row")
+  boardDiv.appendChild(divRow)
+  for (let j = 0;j<board.getBoard()[i].length;j++){
+
+    
+    let divCell = document.createElement("div");
+    divCell.setAttribute("class","cell")
+    divCell.setAttribute(`id`, `c${i}${j}`)
+    divCell.setAttribute('row', `${i}`)
+    divCell.setAttribute(`col`, `${j}`)
+  divRow.appendChild(divCell);
+  
+}
+}
+
+const clickListener = (() => {
+const gridCells = document.querySelectorAll(".cell")
+ gridCells.forEach((cell) =>{
+  cell.addEventListener("click", () => {
+    control.playRound(cell.getAttribute("row"), cell.getAttribute("col"))
+    cell.textContent = `${control.getActivePlayer().token}`
+    control.switchPlayers();
+    console.log(`Active player is ${control.getActivePlayer().name}`)
+    messageScreen.textContent=playMessage();
+   
+    
+  })
+ })
+})();
+
+})()
+return {control, boardDiv, board, renderDivs}
+})()
