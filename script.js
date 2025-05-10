@@ -9,13 +9,14 @@ const Gameboard = (rows = 3, cols = 3) => {
   const getBoard = () => board;
 
   const placeToken = (row, column, player) => {
+    console.log(`${board[row][column].getValue()}`)
     if (board[row][column].getValue() === "-") {
       board[row][column].addToken(player);
     } else {
       console.log(`That square has been played`);
-    }
+      
   };
-
+  }
   const renderBoard = () => {
     const boardWithCellValues = board.map((row) =>
       row.map((cell) => cell.getValue())
@@ -26,7 +27,7 @@ const Gameboard = (rows = 3, cols = 3) => {
   };
 
   return { getBoard, placeToken, renderBoard };
-};
+}
 
 function Cell() {
   let value = "-";
@@ -39,14 +40,16 @@ function Cell() {
   return { addToken, getValue };
 }
 
-const Player = (name, token, score) => {
-  return { name, token, score };
+const Player = (name, token) => {
+   let score = 0
+
+  return { name, token, score};
 };
 
 const gameControl = () => {
   const gameboard = Gameboard(3, 3); //get the board
-  const player1 = Player("Player 1", "X", 0);
-  const player2 = Player("Player 2", "0", 0);
+  const player1 = Player("Player 1", "X");
+  const player2 = Player("Player 2", "0");
 
   const playerArray = [player1, player2]; // establish the players in an array
   let activePlayer = playerArray[0]; // active player is the first player
@@ -58,7 +61,7 @@ const gameControl = () => {
     } else {
       activePlayer = playerArray[0];
     }
-    gameboard.renderBoard(); //Put the board on the screen
+    gameboard.renderBoard(); //Put the board in the console
 
     console.log(
       `${activePlayer.name}'s turn. Place your '${activePlayer.token}'`
@@ -70,16 +73,24 @@ const gameControl = () => {
 
   const playRound = (row, col) => {
     const currentPlayer = getActivePlayer();
-    gameboard.placeToken(row, col, currentPlayer);
+    const currentCell = gameboard;
+
+  
+   gameboard.placeToken(row, col, currentPlayer);
+   console.log(`currentCell ${gameboard.placeToken(row, col)}`)
+     
+    
     const gameWon = gameOver();
     if (!gameWon) {
-      
+     
       switchPlayers()
     } else {
-      currentPlayer.score = currentPlayer.score++
+      currentPlayer.score++
+      
       gameWon
     }
-  };
+ 
+};
 
   const gameOver = () => {
     const board = gameboard.renderBoard();
@@ -127,6 +138,10 @@ const gameControl = () => {
     }
   };
 
+  const cellOccupied = () => {
+    
+  }
+
   return { gameboard, getActivePlayer, gameOver, switchPlayers, playRound, player1, player2 };
 
   
@@ -156,23 +171,16 @@ const screenControl = (() => {
   const boardDiv = document.querySelector(".board");
   const messageScreen = document.getElementById("messages");
   const playerOneDetails = document.getElementById("player-one");
+  const playerOneScore = document.getElementById("p1-score")
+  const playerTwoScore = document.getElementById("p2-score")
   const playerTwoDetails = document.getElementById("player-two");
+  const activePlayer = control.getActivePlayer();
  
-  playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p><p>Score: ${control.player1.score}</p>`
-  playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'</p><p>Score: ${control.player2.score}</p>`;
-
-
-  const playMessage = () =>
-    `${control.getActivePlayer().name}'s turn. Place your ${
-      control.getActivePlayer().token
-    }.`;
-  const winningMessage = () =>
-    `${control.getActivePlayer().token} wins. Well done ${
-      control.getActivePlayer().name
-    }! <br/> Click here to play again.`;
-  messageScreen.textContent = playMessage();
+  playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p>`
+  playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`
+  playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'`;
+  playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`
   const board = control.gameboard;
-
   const renderDivs = (() => {
     
     for (let i = 0; i < board.getBoard().length; i++) {
@@ -190,29 +198,55 @@ const screenControl = (() => {
     }})()
  
 
+  const playMessage = () =>
+    `${activePlayer.name}'s turn. Place your ${
+      activePlayer.token
+    }.`;
+  const winningMessage = () =>
+    `${activePlayer.token} wins. Well done ${
+      activePlayer.name
+    }! <br/> Click here to play again.`;
+  messageScreen.textContent = playMessage();
+  
+
+  
+
+    const gameWon = () => {
+      messageScreen.innerHTML = winningMessage();
+       playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`
+       playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`
+console.log(activePlayer)
+console.log(activePlayer.score)
+      messageScreen.addEventListener("click", () => {
+       
+             
+             
+      });
+    }
+ 
+
     const clickListener = (() => {
       const gridCells = document.querySelectorAll(".cell");
       gridCells.forEach((cell) => {
         cell.addEventListener("click", () => {
+         
           const row = cell.getAttribute("row");
           const col = cell.getAttribute("col")
           const currentPlayer = control.getActivePlayer()
+          
           control.playRound(row, col);
           const gameIsWon = control.gameOver()
           cell.textContent = `${currentPlayer.token}`;
-          // control.switchPlayers();
-          console.log(`Active player is ${control.getActivePlayer().name}`);
+         
+          console.log(`Active player is ${activePlayer.name}`);
 
           if (gameIsWon) {
+          
             
-            // control.switchPlayers();
+            gameWon()
+            
 
-            messageScreen.innerHTML = winningMessage();
-
-            messageScreen.addEventListener("click", () => {
-             
-              location.reload();
-            });
+          
           } else {
             messageScreen.textContent = playMessage();
           }
