@@ -186,7 +186,9 @@ const screenControl = (() => {
         divCell.setAttribute(`col`, `${j}`);
         divRow.appendChild(divCell);
       }
-    }})()
+    }
+  }
+)()
  
 
   const playMessage = () =>
@@ -233,7 +235,12 @@ console.log(control.getActivePlayer().score)
           return
          } else {
           const gameIsWon = control.playRound(row, col, currentPlayer);
-          cell.textContent = currentPlayer.token;
+          cell.innerHTML = `<p>${currentPlayer.token}</p>`;
+          if (currentPlayer.token === 'X') {
+            cell.setAttribute("class", "token-x")
+          } else if (currentPlayer.token === '0') {
+            cell.setAttribute("class", "token-0")
+          }
           
          
           

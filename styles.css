@@ -18,6 +18,14 @@
    
 }
 
+button {
+    margin: 25px;
+    /* border: 0;
+    line-height: 2rem;
+    padding: 0 20px; */
+
+}
+
 p{
      padding-top: 5px;
    display: flex; 
@@ -50,7 +58,7 @@ p{
 }
 .token-x{
     background-color: lightblue;
-   
+   position: relative;
     border: grey solid 1px
 }
 
@@ -68,7 +76,25 @@ grid-template-columns: 1fr 1fr 1fr;
 height: 100px;
 width: 300px;
 
+.temp::after{
+    content:"";
+    position: absolute;
+    
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px solid #ff0000;
+    /* diagonal reverse */
+    /* transform:  rotate(135deg) scale(1.4); */
+     /* diagonal */
+    /* transform:  rotate(45deg) scale(1.4); */
+    /* up-down */
+    /* transform: translate(50%); */
+    /* left-right */
+    transform:  rotate(90deg) ;
+    
 
+}
 
 }
 
@@ -78,7 +104,7 @@ width: 300px;
    flex-direction: column;
    justify-content: center;
    /* align-items: center; */
-   
+   position: relative;
   
     border: 1px blue solid;
    
@@ -110,4 +136,9 @@ width: 300px;
 /* right cells - no right border */
 #c02, #c12, #c22{
     border-right: none;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
 }
