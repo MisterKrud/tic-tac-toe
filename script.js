@@ -32,7 +32,11 @@ const Gameboard = (rows = 3, cols = 3) => {
     return boardWithCellValues;
   };
 
-  return { getBoard, placeToken, renderBoard };
+const resetBoard = () => {
+  board.forEach((row) =>row.forEach((cell) => cell.reset()))
+}
+
+  return { getBoard, placeToken, renderBoard, resetBoard };
 }
 
 function Cell() {
@@ -42,8 +46,9 @@ function Cell() {
   };
 
   const getValue = () => value;
+  const reset = ()  => value = '-'
 
-  return { addToken, getValue };
+  return { addToken, getValue, reset };
 }
 
 const Player = (name, token) => {
@@ -55,6 +60,7 @@ const Player = (name, token) => {
 const gameControl = () => {
   console.log("gameControl() invoked");
   const gameboard = Gameboard(3, 3); //get the board
+  console.log(gameboard)
   const player1 = Player("Player 1", "X");
   const player2 = Player("Player 2", "0");
 
@@ -94,6 +100,7 @@ const gameControl = () => {
       // console.log(`CURRENT PLAYER: ${getActivePlayer().name}`)
     } else {
      currentPlayer.score++;
+    //  gameboard[row]
 
      
     }
@@ -141,6 +148,11 @@ const gameControl = () => {
       allLines.some((arr) => arr.every((value) => value === player1.token)) ||
       allLines.some((arr) => arr.every((value) => value === player2.token))
     ) {
+
+
+
+
+   
       return true;
     } else {
       return false;
@@ -157,6 +169,7 @@ const gameControl = () => {
 
 
 const screenControl = (() => {
+  
   const control = gameControl();
   let gameIsOver = false
   const boardDiv = document.querySelector(".board");
@@ -165,6 +178,8 @@ const screenControl = (() => {
   const playerOneScore = document.getElementById("p1-score")
   const playerTwoScore = document.getElementById("p2-score")
   const playerTwoDetails = document.getElementById("player-two");
+  const controlsDiv = document.querySelector(".controls");
+
 
  
   playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p>`
@@ -172,6 +187,9 @@ const screenControl = (() => {
   playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'`;
   playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`
   const board = control.gameboard;
+  const playAgain = document.createElement("button")
+  playAgain.textContent = 'Play Again'
+  
   const renderDivs = (() => {
     
     for (let i = 0; i < board.getBoard().length; i++) {
@@ -189,6 +207,8 @@ const screenControl = (() => {
     }
   }
 )()
+
+const gridCells = document.querySelectorAll(".cell");
  
 
   const playMessage = () =>
@@ -219,11 +239,11 @@ console.log(control.getActivePlayer().score)
  
 
     const clickListener = (() => {
+      
      
-      const gridCells = document.querySelectorAll(".cell");
       gridCells.forEach((cell) => {
         cell.addEventListener("click", () => {
-          if (gameIsOver) return
+          // if (gameIsOver) return
           // const gameIsWon = control.gameOver()
           const row = cell.getAttribute("row");
           const col = cell.getAttribute("col")
@@ -252,16 +272,28 @@ console.log(control.getActivePlayer().score)
             gameIsOver = true
             gameWon()
         
+            controlsDiv.appendChild(playAgain)
             
-            
+            playAgain.addEventListener ("click", () => {
+              control.gameboard.resetBoard();
+              const cells = document.querySelectorAll(".cell");
+              gridCells.forEach(cell => {
+                cell.textContent = '';
+                cell.setAttribute("class", "cell")
+                // cell.setAttribute("style", "border: blue 1px solid")
+              })
+              playAgain.remove(); })
 
-          
+              // 
+
           } else {
             messageScreen.textContent = playMessage();
           }
         }});
       });
     })();
+
+ 
   
   // return {  boardDiv, board, renderDivs};
 
