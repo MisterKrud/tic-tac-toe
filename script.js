@@ -46,7 +46,7 @@ function Cell() {
   const reset = () => (value = "-");
 
   return { addToken, getValue, reset };
-}
+};
 
 const Player = (name, token) => {
   let score = 0;
@@ -178,13 +178,13 @@ const screenControl = (() => {
   const player2Button = document.createElement("button");
   player2Button.setAttribute("id", "player2-name");
   player2Button.setAttribute("class", "playerNameUpdateButton");
-  
-  playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p>`;
+
+  playerOneDetails.innerHTML = `<p>${control.player1.name}: ${control.player1.token}</p>`;
   playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
   playerOneScore.appendChild(player1Button);
   player1Button.textContent = "Enter name";
 
-  playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'`;
+  playerTwoDetails.innerHTML = `<p>${control.player2.name}: ${control.player2.token}`;
   playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
   playerTwoScore.appendChild(player2Button);
   player2Button.textContent = "Enter name";
@@ -192,64 +192,42 @@ const screenControl = (() => {
   const playAgain = document.createElement("button");
   playAgain.textContent = "Play Again";
   const resetScore = document.createElement("button");
-  resetScore.textContent = "Reset"
-  const playerButtons = document.querySelectorAll(".playerNameUpdateButton")
+  resetScore.textContent = "Reset";
+  const playerButtons = document.querySelectorAll(".playerNameUpdateButton");
 
- 
-  let editingPlayer
+  let editingPlayer;
   const enterPlayerName = (() => {
-   
-    
-    
     playerButtons.forEach((button) => {
       button.addEventListener("click", () => {
         if (button.getAttribute("id") === "player1-name") {
-        editingPlayer = "player1";
-        } else if(button.getAttribute("id") === "player2-name"){
+          editingPlayer = "player1";
+        } else if (button.getAttribute("id") === "player2-name") {
           editingPlayer = "player2";
         }
-          enterName.showModal();
-        
+        enterName.showModal();
       });
-     
     });
-  
-  })()
-     
-        const submitName = (() => {
-     
-        playerNameSubmitButton.addEventListener("click", (e) => {
-          e.preventDefault();
-          const nameInput = document.getElementById("player-name");
-            let playerName = nameInput.value;
-         
-            if(editingPlayer === "player1"){
-              control.player1.name = playerName
-              playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p>`;
+  })();
 
-            } else 
-            
-            if(editingPlayer === "player2"){
-              control.player2.name = playerName
-              playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'</p>`;
-            }
-            nameInput.value = ''
-          
-          
-          enterName.close();
-        messageScreen.textContent = playMessage();
-        })
-      })()
-        
-     
-      
-    
-  
-  
+  const submitName = (() => {
+    playerNameSubmitButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById("player-name");
+      let playerName = nameInput.value;
 
+      if (editingPlayer === "player1") {
+        control.player1.name = playerName;
+        playerOneDetails.innerHTML = `<p>${control.player1.name}: ${control.player1.token}</p>`;
+      } else if (editingPlayer === "player2") {
+        control.player2.name = playerName;
+        playerTwoDetails.innerHTML = `<p>${control.player2.name}: ${control.player2.token}</p>`;
+      }
+      nameInput.value = "";
 
-
- 
+      enterName.close();
+      messageScreen.textContent = playMessage();
+    });
+  })();
 
   const renderDivs = (() => {
     for (let i = 0; i < board.getBoard().length; i++) {
@@ -274,9 +252,8 @@ const screenControl = (() => {
       control.getActivePlayer().token
     }.`;
   const winningMessage = () =>
-    `${control.getActivePlayer().name} wins. Well done ${
-      control.getActivePlayer().name
-    }! <br/> Click here to play again.`;
+    `${control.getActivePlayer().name} wins!`
+    
   messageScreen.textContent = playMessage();
 
   const gameWon = () => {
@@ -316,9 +293,9 @@ const screenControl = (() => {
             gameWon();
 
             controlsDiv.appendChild(playAgain);
-            controlsDiv.appendChild(resetScore)
+            controlsDiv.appendChild(resetScore);
 
-            playAgain.addEventListener("click", nextRound)
+            playAgain.addEventListener("click", nextRound);
 
             resetScore.addEventListener("click", () => {
               control.player1.score = 0;
@@ -326,9 +303,8 @@ const screenControl = (() => {
               playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
               playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
               nextRound();
-            }
-            )
-          
+            });
+
             //
           } else {
             messageScreen.textContent = playMessage();
@@ -337,10 +313,9 @@ const screenControl = (() => {
       });
     });
     const nextRound = () => {
-
       control.gameboard.resetBoard();
       const cells = document.querySelectorAll(".cell");
-      
+
       gridCells.forEach((cell) => {
         cell.textContent = "";
         cell.setAttribute("class", "cell");
@@ -351,9 +326,8 @@ const screenControl = (() => {
       messageScreen.textContent = playMessage();
       playerOneScore.appendChild(player1Button);
       playerTwoScore.appendChild(player2Button);
-    }
+    };
   })();
-  
- 
+
   // return {  boardDiv, board, renderDivs};
-})()
+})();

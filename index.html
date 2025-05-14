@@ -13,6 +13,7 @@
             <div id="p1-container" class="player-container">
             <div id="player-one" class="player-name"></div>
                 <div class="score" id="p1-score"></div>
+                
             </div>
             <div id="p2-container" class="player-container">
             <div id="player-two" class="player-name"></div>
@@ -24,6 +25,13 @@
         </div>
         <div class="controls"></div>
     </div>
+    <dialog id="player-one-dialog">
+        <form>
+            <label for="player-name">Enter Name</label><input type="text" id="player-name" name="player-name" required/>
+            <button type="submit" id="name-submit">Submit</button>
+        </form>
+
+    </dialog>
 
 
     <script src="script.js"></script>
