@@ -191,7 +191,8 @@ const screenControl = (() => {
   const board = control.gameboard;
   const playAgain = document.createElement("button");
   playAgain.textContent = "Play Again";
-  const resetScore = document
+  const resetScore = document.createElement("button");
+  resetScore.textContent = "Reset"
   const playerButtons = document.querySelectorAll(".playerNameUpdateButton")
 
  
@@ -317,21 +318,17 @@ const screenControl = (() => {
             controlsDiv.appendChild(playAgain);
             controlsDiv.appendChild(resetScore)
 
-            playAgain.addEventListener("click", () => {
-              control.gameboard.resetBoard();
-              const cells = document.querySelectorAll(".cell");
-              
-              gridCells.forEach((cell) => {
-                cell.textContent = "";
-                cell.setAttribute("class", "cell");
-                // cell.setAttribute("style", "border: blue 1px solid")
-              });
-              playAgain.remove();
-              messageScreen.textContent = playMessage();
-              playerOneScore.appendChild(player1Button);
-              playerTwoScore.appendChild(player2Button);
-            });
+            playAgain.addEventListener("click", nextRound)
 
+            resetScore.addEventListener("click", () => {
+              control.player1.score = 0;
+              control.player2.score = 0;
+              playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
+              playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
+              nextRound();
+            }
+            )
+          
             //
           } else {
             messageScreen.textContent = playMessage();
@@ -339,6 +336,22 @@ const screenControl = (() => {
         }
       });
     });
+    const nextRound = () => {
+
+      control.gameboard.resetBoard();
+      const cells = document.querySelectorAll(".cell");
+      
+      gridCells.forEach((cell) => {
+        cell.textContent = "";
+        cell.setAttribute("class", "cell");
+        // cell.setAttribute("style", "border: blue 1px solid")
+      });
+      playAgain.remove();
+      resetScore.remove();
+      messageScreen.textContent = playMessage();
+      playerOneScore.appendChild(player1Button);
+      playerTwoScore.appendChild(player2Button);
+    }
   })();
   
  
