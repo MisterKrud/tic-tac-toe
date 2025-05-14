@@ -9,20 +9,17 @@ const Gameboard = (rows = 3, cols = 3) => {
   const getBoard = () => board;
 
   const placeToken = (row, column, player) => {
-    
-   
     const cell = board[row][column];
-    
-    console.log(`Cell value: '${cell.getValue()}'`)
+
+    console.log(`Cell value: '${cell.getValue()}'`);
     if (cell.getValue() === "-") {
       cell.addToken(player);
     } else {
       console.log(`That square has been played`);
-      return false
+      return false;
+    }
   };
-  }
 
-    
   const renderBoard = () => {
     const boardWithCellValues = board.map((row) =>
       row.map((cell) => cell.getValue())
@@ -32,12 +29,12 @@ const Gameboard = (rows = 3, cols = 3) => {
     return boardWithCellValues;
   };
 
-const resetBoard = () => {
-  board.forEach((row) =>row.forEach((cell) => cell.reset()))
-}
+  const resetBoard = () => {
+    board.forEach((row) => row.forEach((cell) => cell.reset()));
+  };
 
   return { getBoard, placeToken, renderBoard, resetBoard };
-}
+};
 
 function Cell() {
   let value = "-";
@@ -46,21 +43,21 @@ function Cell() {
   };
 
   const getValue = () => value;
-  const reset = ()  => value = '-'
+  const reset = () => (value = "-");
 
   return { addToken, getValue, reset };
 }
 
 const Player = (name, token) => {
-   let score = 0
+  let score = 0;
 
-  return { name, token, score};
+  return { name, token, score };
 };
 
 const gameControl = () => {
   console.log("gameControl() invoked");
   const gameboard = Gameboard(3, 3); //get the board
-  console.log(gameboard)
+  console.log(gameboard);
   const player1 = Player("Player 1", "X");
   const player2 = Player("Player 2", "0");
 
@@ -85,7 +82,7 @@ const gameControl = () => {
   const getActivePlayer = () => activePlayer;
 
   const playRound = (row, col) => {
-    const currentPlayer = getActivePlayer()
+    const currentPlayer = getActivePlayer();
     // console.log(`STARTING ROUND`)
 
     // console.log(`ACTIVE PLAYER: ${getActivePlayer().name}`)
@@ -99,16 +96,13 @@ const gameControl = () => {
       switchPlayers();
       // console.log(`CURRENT PLAYER: ${getActivePlayer().name}`)
     } else {
-     currentPlayer.score++;
-    //  gameboard[row]
-
-     
+      currentPlayer.score++;
+      //  gameboard[row]
     }
-    return gameWon
+    return gameWon;
   };
 
   const gameOver = () => {
-    
     const board = gameboard.renderBoard();
 
     const cols = () => {
@@ -148,50 +142,115 @@ const gameControl = () => {
       allLines.some((arr) => arr.every((value) => value === player1.token)) ||
       allLines.some((arr) => arr.every((value) => value === player2.token))
     ) {
-
-
-
-
-   
       return true;
     } else {
       return false;
     }
   };
 
- 
-
-  return { gameboard, getActivePlayer, gameOver, switchPlayers, playRound, player1, player2 };
-
-  
+  return {
+    gameboard,
+    getActivePlayer,
+    gameOver,
+    switchPlayers,
+    playRound,
+    player1,
+    player2,
+  };
 };
 
-
-
 const screenControl = (() => {
-  
   const control = gameControl();
-  let gameIsOver = false
+  let gameIsOver = false;
   const boardDiv = document.querySelector(".board");
   const messageScreen = document.getElementById("messages");
+  const enterName = document.querySelector("dialog");
+
+  const playerNameSubmitButton = document.getElementById("name-submit");
   const playerOneDetails = document.getElementById("player-one");
-  const playerOneScore = document.getElementById("p1-score")
-  const playerTwoScore = document.getElementById("p2-score")
+  const playerOneScore = document.getElementById("p1-score");
+  const playerTwoScore = document.getElementById("p2-score");
   const playerTwoDetails = document.getElementById("player-two");
   const controlsDiv = document.querySelector(".controls");
+  const player1Button = document.createElement("button");
+  player1Button.setAttribute("id", "player1-name");
+  player1Button.setAttribute("class", "playerNameUpdateButton");
+  const player2Button = document.createElement("button");
+  player2Button.setAttribute("id", "player2-name");
+  player2Button.setAttribute("class", "playerNameUpdateButton");
+  
+  playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p>`;
+  playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
+  playerOneScore.appendChild(player1Button);
+  player1Button.textContent = "Enter name";
+
+  playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'`;
+  playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
+  playerTwoScore.appendChild(player2Button);
+  player2Button.textContent = "Enter name";
+  const board = control.gameboard;
+  const playAgain = document.createElement("button");
+  playAgain.textContent = "Play Again";
+  const resetScore = document
+  const playerButtons = document.querySelectorAll(".playerNameUpdateButton")
+
+ 
+  let editingPlayer
+  const enterPlayerName = (() => {
+   
+    
+    
+    playerButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.getAttribute("id") === "player1-name") {
+        editingPlayer = "player1";
+        } else if(button.getAttribute("id") === "player2-name"){
+          editingPlayer = "player2";
+        }
+          enterName.showModal();
+        
+      });
+     
+    });
+  
+  })()
+     
+        const submitName = (() => {
+     
+        playerNameSubmitButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          const nameInput = document.getElementById("player-name");
+            let playerName = nameInput.value;
+         
+            if(editingPlayer === "player1"){
+              control.player1.name = playerName
+              playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p>`;
+
+            } else 
+            
+            if(editingPlayer === "player2"){
+              control.player2.name = playerName
+              playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'</p>`;
+            }
+            nameInput.value = ''
+          
+          
+          enterName.close();
+        messageScreen.textContent = playMessage();
+        })
+      })()
+        
+     
+      
+    
+  
+  
+
 
 
  
-  playerOneDetails.innerHTML = `<p>${control.player1.name}: '${control.player1.token}'</p>`
-  playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`
-  playerTwoDetails.innerHTML = `<p>${control.player2.name}: '${control.player2.token}'`;
-  playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`
-  const board = control.gameboard;
-  const playAgain = document.createElement("button")
-  playAgain.textContent = 'Play Again'
-  
+
   const renderDivs = (() => {
-    
     for (let i = 0; i < board.getBoard().length; i++) {
       let divRow = document.createElement("div");
       divRow.setAttribute("class", "row");
@@ -205,96 +264,83 @@ const screenControl = (() => {
         divRow.appendChild(divCell);
       }
     }
-  }
-)()
+  })();
 
-const gridCells = document.querySelectorAll(".cell");
- 
+  const gridCells = document.querySelectorAll(".cell");
 
   const playMessage = () =>
     `${control.getActivePlayer().name}'s turn. Place your ${
       control.getActivePlayer().token
     }.`;
   const winningMessage = () =>
-    `${control.getActivePlayer().token} wins. Well done ${
+    `${control.getActivePlayer().name} wins. Well done ${
       control.getActivePlayer().name
     }! <br/> Click here to play again.`;
   messageScreen.textContent = playMessage();
-  
 
-  
+  const gameWon = () => {
+    messageScreen.innerHTML = winningMessage();
+    playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
+    playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
+    console.log(control.getActivePlayer());
+    console.log(control.getActivePlayer().score);
+    messageScreen.addEventListener("click", () => {});
+  };
 
-    const gameWon = () => {
-      messageScreen.innerHTML = winningMessage();
-       playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`
-       playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`
-console.log(control.getActivePlayer())
-console.log(control.getActivePlayer().score)
-      messageScreen.addEventListener("click", () => {
-       
-             
-             
-      });
-    }
- 
+  const clickListener = (() => {
+    gridCells.forEach((cell) => {
+      cell.addEventListener("click", () => {
+        // if (gameIsOver) return
+        // const gameIsWon = control.gameOver()
+        const row = cell.getAttribute("row");
+        const col = cell.getAttribute("col");
+        const currentPlayer = control.getActivePlayer();
 
-    const clickListener = (() => {
-      
-     
-      gridCells.forEach((cell) => {
-        cell.addEventListener("click", () => {
-          // if (gameIsOver) return
-          // const gameIsWon = control.gameOver()
-          const row = cell.getAttribute("row");
-          const col = cell.getAttribute("col")
-        const currentPlayer = control.getActivePlayer()
-        
-
-         if (control.gameboard.getBoard()[row][col].getValue() != "-"){
-          console.log('From Listener: Square already played')
-          return
-         } else {
+        if (control.gameboard.getBoard()[row][col].getValue() != "-") {
+          console.log("From Listener: Square already played");
+          return;
+        } else {
           const gameIsWon = control.playRound(row, col, currentPlayer);
           cell.innerHTML = `<p>${currentPlayer.token}</p>`;
-          if (currentPlayer.token === 'X') {
-            cell.setAttribute("class", "token-x")
-          } else if (currentPlayer.token === '0') {
-            cell.setAttribute("class", "token-0")
+          if (currentPlayer.token === "X") {
+            cell.setAttribute("class", "token-x");
+          } else if (currentPlayer.token === "0") {
+            cell.setAttribute("class", "token-0");
           }
-          
-         
-          
-         
+
           console.log(`Active player is ${control.getActivePlayer().name}`);
 
           if (gameIsWon) {
-          
-            gameIsOver = true
-            gameWon()
-        
-            controlsDiv.appendChild(playAgain)
-            
-            playAgain.addEventListener ("click", () => {
+            gameIsOver = true;
+            gameWon();
+
+            controlsDiv.appendChild(playAgain);
+            controlsDiv.appendChild(resetScore)
+
+            playAgain.addEventListener("click", () => {
               control.gameboard.resetBoard();
               const cells = document.querySelectorAll(".cell");
-              gridCells.forEach(cell => {
-                cell.textContent = '';
-                cell.setAttribute("class", "cell")
+              
+              gridCells.forEach((cell) => {
+                cell.textContent = "";
+                cell.setAttribute("class", "cell");
                 // cell.setAttribute("style", "border: blue 1px solid")
-              })
-              playAgain.remove(); })
+              });
+              playAgain.remove();
+              messageScreen.textContent = playMessage();
+              playerOneScore.appendChild(player1Button);
+              playerTwoScore.appendChild(player2Button);
+            });
 
-              // 
-
+            //
           } else {
             messageScreen.textContent = playMessage();
           }
-        }});
+        }
       });
-    })();
-
- 
+    });
+  })();
   
+ 
   // return {  boardDiv, board, renderDivs};
-
-  })()
+})()
