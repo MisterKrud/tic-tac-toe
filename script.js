@@ -56,6 +56,8 @@ const Player = (name, token) => {
 
 const gameControl = () => {
   console.log("gameControl() invoked");
+  let gameIsOver = null;
+  
   const gameboard = Gameboard(3, 3); //get the board
   console.log(gameboard);
   const player1 = Player("Player 1", "X");
@@ -66,6 +68,9 @@ const gameControl = () => {
 
   //If player1 is active, swap the active player to player2
   const switchPlayers = () => {
+    // if (playerArray = []){
+    //   return
+    // } else
     if (activePlayer === playerArray[0]) {
       activePlayer = playerArray[1];
     } else {
@@ -78,7 +83,7 @@ const gameControl = () => {
     ); //Tell the player it's their turn
     return activePlayer;
   };
-
+  // const removePlayers = () => playerArray.splice(0);
   const getActivePlayer = () => activePlayer;
 
   const playRound = (row, col) => {
@@ -97,11 +102,12 @@ const gameControl = () => {
       // console.log(`CURRENT PLAYER: ${getActivePlayer().name}`)
     } else {
       currentPlayer.score++;
-      //  gameboard[row]
+     gameIsOver = true
     }
     return gameWon;
   };
 
+  let winningRow
   const gameOver = () => {
     const board = gameboard.renderBoard();
 
@@ -138,22 +144,59 @@ const gameControl = () => {
     const allLines = [...rows(), ...cols(), ...diagonals()];
     console.log(allLines);
 
+    const xIndex = allLines.findIndex((arr) => arr.every((value) => value === player1.token))
+    const oIndex = allLines.findIndex((arr) => arr.every((value) => value === player2.token))
+
+    
+   
+    
+    if (xIndex !=-1){
+      winningRow = xIndex;
+    } else if (oIndex != -1){
+      winningRow = oIndex
+    } else {
+      console.log('Continue')
+    }
+   
+    
+  
+    
+    if (winningRow >= 0 && winningRow <=2){
+      console.log(`winningRow is 1-3: ${winningRow+1}`)
+
+    } else 
+    if (winningRow >= 3 && winningRow <=5){
+      console.log(`winningRow is 4-6: ${winningRow+1}`)
+      
+      }  else
+      if (winningRow >= 6 && winningRow <=7){
+        console.log(`winningRow is 7-8: ${winningRow+1}`)
+       
+      }
+
+      const getWinningLine = () => allLines[winningRow] 
+      console.log(`From the gameOver function: ${getWinningLine()}`)
+     
     if (
       allLines.some((arr) => arr.every((value) => value === player1.token)) ||
       allLines.some((arr) => arr.every((value) => value === player2.token))
     ) {
+      console.log(allLines);
       return true;
     } else {
       return false;
     }
+   
   };
-
+  const getWinningRow = () => winningRow;
   return {
     gameboard,
     getActivePlayer,
     gameOver,
     switchPlayers,
     playRound,
+   getWinningRow,
+  //  removePlayers,
     player1,
     player2,
   };
@@ -194,6 +237,9 @@ const screenControl = (() => {
   const resetScore = document.createElement("button");
   resetScore.textContent = "Reset";
   const playerButtons = document.querySelectorAll(".playerNameUpdateButton");
+
+
+  
 
   let editingPlayer;
   const enterPlayerName = (() => {
@@ -257,12 +303,18 @@ const screenControl = (() => {
   messageScreen.textContent = playMessage();
 
   const gameWon = () => {
+    
     messageScreen.innerHTML = winningMessage();
     playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
     playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
     console.log(control.getActivePlayer());
     console.log(control.getActivePlayer().score);
     messageScreen.addEventListener("click", () => {});
+    control.player1.token = '';
+    control.player2.token = '';
+   
+
+   
   };
 
   const clickListener = (() => {
@@ -289,12 +341,19 @@ const screenControl = (() => {
           console.log(`Active player is ${control.getActivePlayer().name}`);
 
           if (gameIsWon) {
+            
             gameIsOver = true;
             gameWon();
+            
+            const winnerRow = control.getWinningRow();
+
+            
+
+            console.log(`winnerRow: ${winnerRow}`)
 
             controlsDiv.appendChild(playAgain);
             controlsDiv.appendChild(resetScore);
-
+            
             playAgain.addEventListener("click", nextRound);
 
             resetScore.addEventListener("click", () => {
@@ -303,6 +362,7 @@ const screenControl = (() => {
               playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
               playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
               nextRound();
+              
             });
 
             //
