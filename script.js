@@ -84,9 +84,12 @@ const gameControl = () => {
     return activePlayer;
   };
   // const removePlayers = () => playerArray.splice(0);
-  const getActivePlayer = () => activePlayer;
+  const getActivePlayer = () => activePlayer
+ 
 
   const playRound = (row, col) => {
+ 
+
     const currentPlayer = getActivePlayer();
     // console.log(`STARTING ROUND`)
 
@@ -101,12 +104,21 @@ const gameControl = () => {
       switchPlayers();
       // console.log(`CURRENT PLAYER: ${getActivePlayer().name}`)
     } else {
-      currentPlayer.score++;
-     gameIsOver = true
+      currentPlayer.score++
+    //  winner = currentPlayer;
+    
+
+    
+
+    
+
+  // return winner;
+   
     }
+    
     return gameWon;
   };
-
+const getWinner = () => winner;
   let winningRow
   const gameOver = () => {
     const board = gameboard.renderBoard();
@@ -182,6 +194,7 @@ const gameControl = () => {
       allLines.some((arr) => arr.every((value) => value === player2.token))
     ) {
       console.log(allLines);
+    
       return true;
     } else {
       return false;
@@ -196,6 +209,7 @@ const gameControl = () => {
     switchPlayers,
     playRound,
    getWinningRow,
+  //  getWinner,
   //  removePlayers,
     player1,
     player2,
@@ -204,7 +218,8 @@ const gameControl = () => {
 
 const screenControl = (() => {
   const control = gameControl();
-  let gameIsOver = false;
+  let gameIsOver = false
+
   const boardDiv = document.querySelector(".board");
   const messageScreen = document.getElementById("messages");
   const enterName = document.querySelector("dialog");
@@ -309,9 +324,9 @@ const screenControl = (() => {
     playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
     console.log(control.getActivePlayer());
     console.log(control.getActivePlayer().score);
-    messageScreen.addEventListener("click", () => {});
-    control.player1.token = '';
-    control.player2.token = '';
+   
+   
+ 
    
 
    
@@ -320,17 +335,18 @@ const screenControl = (() => {
   const clickListener = (() => {
     gridCells.forEach((cell) => {
       cell.addEventListener("click", () => {
-        // if (gameIsOver) return
+        if (gameIsOver) return
         // const gameIsWon = control.gameOver()
         const row = cell.getAttribute("row");
         const col = cell.getAttribute("col");
-        const currentPlayer = control.getActivePlayer();
+        let currentPlayer = control.getActivePlayer();
 
         if (control.gameboard.getBoard()[row][col].getValue() != "-") {
           console.log("From Listener: Square already played");
           return;
         } else {
           const gameIsWon = control.playRound(row, col, currentPlayer);
+          
           cell.innerHTML = `<p>${currentPlayer.token}</p>`;
           if (currentPlayer.token === "X") {
             cell.setAttribute("class", "token-x");
@@ -339,21 +355,23 @@ const screenControl = (() => {
           }
 
           console.log(`Active player is ${control.getActivePlayer().name}`);
+          
 
           if (gameIsWon) {
-            
+            // currentPlayer = control.getWinner();
             gameIsOver = true;
-            gameWon();
-            
+            gameWon()
+           
             const winnerRow = control.getWinningRow();
 
+          
             
 
             console.log(`winnerRow: ${winnerRow}`)
 
             controlsDiv.appendChild(playAgain);
             controlsDiv.appendChild(resetScore);
-            
+           
             playAgain.addEventListener("click", nextRound);
 
             resetScore.addEventListener("click", () => {
@@ -361,6 +379,8 @@ const screenControl = (() => {
               control.player2.score = 0;
               playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
               playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
+              
+              
               nextRound();
               
             });
@@ -373,6 +393,7 @@ const screenControl = (() => {
       });
     });
     const nextRound = () => {
+      gameIsOver = false;
       control.gameboard.resetBoard();
       const cells = document.querySelectorAll(".cell");
 
@@ -388,6 +409,7 @@ const screenControl = (() => {
       playerTwoScore.appendChild(player2Button);
     };
   })();
-
+  
+  
   // return {  boardDiv, board, renderDivs};
 })();
