@@ -11,7 +11,16 @@ body {
     
     
 }
+.board-background {
+    background-color: rgb(231, 231, 231);
+   padding: 30px;
+   margin-top: 25px;
+   width: 400px;
+   margin: 35px auto;
+   border-radius: 10px;
 
+
+}
 
 .board {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
