@@ -227,6 +227,7 @@ const screenControl = (() => {
   // playerTwoScore.appendChild(player2Button);
   // player2Button.textContent = "Enter name";
   const board = control.gameboard;
+  console.log(`The board: ${board}`)
   const playAgain = document.createElement("button");
   playAgain.textContent = "Play Again";
   const resetScore = document.createElement("button");
@@ -325,7 +326,13 @@ const screenControl = (() => {
         if (control.gameboard.getBoard()[row][col].getValue() != "-") {
           console.log("From Listener: Square already played");
           return;
-        } else {
+        } else  
+        
+        
+        
+        
+        
+        {
           const gameIsWon = control.playRound(row, col, currentPlayer);
 
           cell.innerHTML = `<p>${currentPlayer.token}</p>`;
@@ -376,6 +383,28 @@ const screenControl = (() => {
 
             console.log(`winnerRow: ${winnerRow}`);
 
+          endOfRound();
+
+            //
+          } else {
+
+           const boardArray = board.getBoard();
+const boardIsFull = !boardArray.some(row => 
+  row.some(cell => cell.getValue() === '-')
+);
+
+if (boardIsFull) {
+         gameIsOver = true;
+          messageScreen.textContent = 'No winner. Try again.';
+          endOfRound()
+        } else {
+            messageScreen.textContent = playMessage();
+          }
+        }
+      }
+    });
+
+      const endOfRound = () => {
             controlsDiv.appendChild(playAgain);
             controlsDiv.appendChild(resetScore);
 
@@ -386,17 +415,10 @@ const screenControl = (() => {
               control.player2.score = 0;
               playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
               playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
-
+              
               nextRound();
-            });
+            })};
 
-            //
-          } else {
-            messageScreen.textContent = playMessage();
-          }
-        }
-      });
-    });
     const nextRound = () => {
       gameIsOver = false;
       control.gameboard.resetBoard();
@@ -413,7 +435,7 @@ const screenControl = (() => {
       playerOneScore.appendChild(player1Button);
       playerTwoScore.appendChild(player2Button);
     };
-  })();
+  })})();
 
   // return {  boardDiv, board, renderDivs};
 })();
