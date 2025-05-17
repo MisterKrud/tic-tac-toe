@@ -15,7 +15,8 @@ body {
     background-color: rgb(231, 231, 231);
    padding: 30px;
    margin-top: 25px;
-   width: 400px;
+   max-width: 400px;
+   min-width:170px;
    margin: 35px auto;
    border-radius: 10px;
 
