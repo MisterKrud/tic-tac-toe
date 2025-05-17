@@ -113,7 +113,7 @@ input:hover, input:focus{
     border-radius: 5px;
 }
 
-#player-names{
+#player-containers{
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin: 8px;
@@ -167,27 +167,10 @@ grid-template-columns: 1fr 1fr 1fr;
 height: 100px;
 width: 300px;
 
-.temp::after{
-    content:"";
-    position: absolute;
-    
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    border-left: 1px solid #ff0000;
-    /* diagonal reverse */
-    /* transform:  rotate(135deg) scale(1.4); */
-     /* diagonal */
-    /* transform:  rotate(45deg) scale(1.4); */
-    /* up-down */
-    /* transform: translate(50%); */
-    /* left-right */
-    transform:  rotate(90deg) ;
-    
+
 
 }
 
-}
 
 
 .cell {
@@ -234,4 +217,62 @@ width: 300px;
 .controls {
     display: flex;
     justify-content: center;
+}
+
+
+.row-win::after{
+    content:"";
+    position: absolute;
+    
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 0.1rem solid green;
+    transform:  rotate(90deg) ;
+    
+}
+.col-win::after{
+    content:"";
+    position: absolute;
+    
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px solid rgb(44, 44, 44);
+    /* diagonal reverse */
+    /* transform:  rotate(135deg) scale(1.4); */
+     /* diagonal */
+    /* transform:  rotate(45deg) scale(1.4); */
+    /* up-down */
+    transform: translate(50%);
+
+}
+.diagonal-win::after{
+    content:"";
+    position: absolute;
+    
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px solid rgb(44, 44, 44);
+    /* diagonal reverse */
+    transform:  rotate(135deg) scale(1.4);
+     /* diagonal */
+    /* transform:  rotate(45deg) scale(1.4); */
+ 
+
+}
+
+.reverse-diagonal-win::after{
+    content:"";
+    position: absolute;
+    
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px solid rgb(44, 44, 44);
+ 
+    transform:  rotate(45deg) scale(1.4);
+ 
+
 }

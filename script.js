@@ -46,7 +46,7 @@ function Cell() {
   const reset = () => (value = "-");
 
   return { addToken, getValue, reset };
-};
+}
 
 const Player = (name, token) => {
   let score = 0;
@@ -57,7 +57,7 @@ const Player = (name, token) => {
 const gameControl = () => {
   console.log("gameControl() invoked");
   let gameIsOver = null;
-  
+
   const gameboard = Gameboard(3, 3); //get the board
   console.log(gameboard);
   const player1 = Player("Player 1", "X");
@@ -84,12 +84,9 @@ const gameControl = () => {
     return activePlayer;
   };
   // const removePlayers = () => playerArray.splice(0);
-  const getActivePlayer = () => activePlayer
- 
+  const getActivePlayer = () => activePlayer;
 
   const playRound = (row, col) => {
- 
-
     const currentPlayer = getActivePlayer();
     // console.log(`STARTING ROUND`)
 
@@ -104,22 +101,16 @@ const gameControl = () => {
       switchPlayers();
       // console.log(`CURRENT PLAYER: ${getActivePlayer().name}`)
     } else {
-      currentPlayer.score++
-    //  winner = currentPlayer;
-    
+      currentPlayer.score++;
+      //  winner = currentPlayer;
 
-    
-
-    
-
-  // return winner;
-   
+      // return winner;
     }
-    
+
     return gameWon;
   };
-const getWinner = () => winner;
-  let winningRow
+  const getWinner = () => winner;
+  let winningRow;
   const gameOver = () => {
     const board = gameboard.renderBoard();
 
@@ -150,56 +141,48 @@ const getWinner = () => winner;
       diagonalArray.push(mainDiagonal, antiDiagonal);
       return diagonalArray;
     };
-
+console.log(`diagonals: ${diagonals()}, cols: ${cols()}`)
     const rows = () => board;
 
     const allLines = [...rows(), ...cols(), ...diagonals()];
     console.log(allLines);
 
-    const xIndex = allLines.findIndex((arr) => arr.every((value) => value === player1.token))
-    const oIndex = allLines.findIndex((arr) => arr.every((value) => value === player2.token))
+    const xIndex = allLines.findIndex((arr) =>
+      arr.every((value) => value === player1.token)
+    );
+    const oIndex = allLines.findIndex((arr) =>
+      arr.every((value) => value === player2.token)
+    );
 
-    
-   
-    
-    if (xIndex !=-1){
+    if (xIndex != -1) {
       winningRow = xIndex;
-    } else if (oIndex != -1){
-      winningRow = oIndex
+    } else if (oIndex != -1) {
+      winningRow = oIndex;
     } else {
-      console.log('Continue')
+      console.log("Continue");
     }
-   
-    
-  
-    
-    if (winningRow >= 0 && winningRow <=2){
-      console.log(`winningRow is 1-3: ${winningRow+1}`)
 
-    } else 
-    if (winningRow >= 3 && winningRow <=5){
-      console.log(`winningRow is 4-6: ${winningRow+1}`)
-      
-      }  else
-      if (winningRow >= 6 && winningRow <=7){
-        console.log(`winningRow is 7-8: ${winningRow+1}`)
-       
-      }
+    if (winningRow >= 0 && winningRow <= 2) {
+      console.log(`winningRow is 1-3: ${winningRow + 1}`);
+    } else if (winningRow >= 3 && winningRow <= 5) {
+      console.log(`winningRow is 4-6: ${winningRow + 1}`);
+    } else if (winningRow >= 6 && winningRow <= 7) {
+      console.log(`winningRow is 7-8: ${winningRow + 1}`);
+    }
 
-      const getWinningLine = () => allLines[winningRow] 
-      console.log(`From the gameOver function: ${getWinningLine()}`)
-     
+    const getWinningLine = () => allLines[winningRow];
+    console.log(`From the gameOver function: ${getWinningLine()}`);
+
     if (
       allLines.some((arr) => arr.every((value) => value === player1.token)) ||
       allLines.some((arr) => arr.every((value) => value === player2.token))
     ) {
       console.log(allLines);
-    
+
       return true;
     } else {
       return false;
     }
-   
   };
   const getWinningRow = () => winningRow;
   return {
@@ -208,9 +191,9 @@ const getWinner = () => winner;
     gameOver,
     switchPlayers,
     playRound,
-   getWinningRow,
-  //  getWinner,
-  //  removePlayers,
+    getWinningRow,
+    //  getWinner,
+    //  removePlayers,
     player1,
     player2,
   };
@@ -218,7 +201,7 @@ const getWinner = () => winner;
 
 const screenControl = (() => {
   const control = gameControl();
-  let gameIsOver = false
+  let gameIsOver = false;
 
   const boardDiv = document.querySelector(".board");
   const messageScreen = document.getElementById("messages");
@@ -230,31 +213,25 @@ const screenControl = (() => {
   const playerTwoScore = document.getElementById("p2-score");
   const playerTwoDetails = document.getElementById("player-two");
   const controlsDiv = document.querySelector(".controls");
-  const player1Button = document.createElement("button");
-  player1Button.setAttribute("id", "player1-name");
-  player1Button.setAttribute("class", "playerNameUpdateButton");
-  const player2Button = document.createElement("button");
-  player2Button.setAttribute("id", "player2-name");
-  player2Button.setAttribute("class", "playerNameUpdateButton");
+  // const player1Button = document.getElementById("player1-name");
+
+  // const player2Button = document.getElementById("player2-name");
 
   playerOneDetails.innerHTML = `<p>${control.player1.name}: ${control.player1.token}</p>`;
   playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
-  playerOneScore.appendChild(player1Button);
-  player1Button.textContent = "Enter name";
+  // playerOneScore.appendChild(player1Button);
+  // player1Button.textContent = "Enter name";
 
   playerTwoDetails.innerHTML = `<p>${control.player2.name}: ${control.player2.token}`;
   playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
-  playerTwoScore.appendChild(player2Button);
-  player2Button.textContent = "Enter name";
+  // playerTwoScore.appendChild(player2Button);
+  // player2Button.textContent = "Enter name";
   const board = control.gameboard;
   const playAgain = document.createElement("button");
   playAgain.textContent = "Play Again";
   const resetScore = document.createElement("button");
   resetScore.textContent = "Reset";
   const playerButtons = document.querySelectorAll(".playerNameUpdateButton");
-
-
-  
 
   let editingPlayer;
   const enterPlayerName = (() => {
@@ -290,11 +267,14 @@ const screenControl = (() => {
     });
   })();
 
+
+
   const renderDivs = (() => {
     for (let i = 0; i < board.getBoard().length; i++) {
       let divRow = document.createElement("div");
       divRow.setAttribute("class", "row");
       boardDiv.appendChild(divRow);
+  
       for (let j = 0; j < board.getBoard()[i].length; j++) {
         let divCell = document.createElement("div");
         divCell.setAttribute("class", "cell");
@@ -302,40 +282,41 @@ const screenControl = (() => {
         divCell.setAttribute("row", `${i}`);
         divCell.setAttribute(`col`, `${j}`);
         divRow.appendChild(divCell);
+       
       }
-    }
+    } 
+   
   })();
 
-  const gridCells = document.querySelectorAll(".cell");
+
+ const gridCells = document.querySelectorAll(".cell");
+ 
+
+
+
+
+
 
   const playMessage = () =>
     `${control.getActivePlayer().name}'s turn. Place your ${
       control.getActivePlayer().token
     }.`;
-  const winningMessage = () =>
-    `${control.getActivePlayer().name} wins!`
-    
+  const winningMessage = () => `${control.getActivePlayer().name} wins!`;
+
   messageScreen.textContent = playMessage();
 
   const gameWon = () => {
-    
     messageScreen.innerHTML = winningMessage();
     playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
     playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
     console.log(control.getActivePlayer());
     console.log(control.getActivePlayer().score);
-   
-   
- 
-   
-
-   
   };
 
   const clickListener = (() => {
     gridCells.forEach((cell) => {
       cell.addEventListener("click", () => {
-        if (gameIsOver) return
+        if (gameIsOver) return;
         // const gameIsWon = control.gameOver()
         const row = cell.getAttribute("row");
         const col = cell.getAttribute("col");
@@ -346,7 +327,7 @@ const screenControl = (() => {
           return;
         } else {
           const gameIsWon = control.playRound(row, col, currentPlayer);
-          
+
           cell.innerHTML = `<p>${currentPlayer.token}</p>`;
           if (currentPlayer.token === "X") {
             cell.setAttribute("class", "token-x");
@@ -355,23 +336,49 @@ const screenControl = (() => {
           }
 
           console.log(`Active player is ${control.getActivePlayer().name}`);
-          
 
           if (gameIsWon) {
             // currentPlayer = control.getWinner();
             gameIsOver = true;
-            gameWon()
-           
+            gameWon();
+
             const winnerRow = control.getWinningRow();
+            // console.log(`boardLines: ${boardLines}`)
+            if (winnerRow >= 0 && winnerRow <= 2) {
+              console.log(`row`);
+           
+              document.querySelectorAll(`[row="${winnerRow}"]`).forEach((cell) => {
+                cell.classList.add("row-win")
+              })
 
+            } else if (winnerRow >= 3 && winnerRow <= 5) {
+              console.log(`col`);
+               document.querySelectorAll(`[col="${winnerRow-3}"]`).forEach((cell) => {
+                cell.classList.add("col-win")
+              })
+             
+            } else if (winnerRow == 6) {
+              for (let d=0;d<(winnerRow-3);d++){
+                document.getElementById(`c${d}${d}`).classList.add("diagonal-win")
+              }
+              console.log(`main diag`);
           
-            
+              
+             
+            } else if (winnerRow == 7) {
+              for (let d=(document.querySelectorAll(".row").length-1); d>=0; d--){
+                document.getElementById(`c${d}${(document.querySelectorAll(".row").length-d-1)}`).classList.add("reverse-diagonal-win")
+              }
+              console.log(`reverse diag`);
+             
+            }
 
-            console.log(`winnerRow: ${winnerRow}`)
+
+            console.log(`winnerRow: ${winnerRow}`);
 
             controlsDiv.appendChild(playAgain);
             controlsDiv.appendChild(resetScore);
-           
+
             playAgain.addEventListener("click", nextRound);
 
             resetScore.addEventListener("click", () => {
@@ -379,10 +386,8 @@ const screenControl = (() => {
               control.player2.score = 0;
               playerOneScore.innerHTML = `<p>Score: ${control.player1.score}</p>`;
               playerTwoScore.innerHTML = `<p>Score: ${control.player2.score}</p>`;
-              
-              
+
               nextRound();
-              
             });
 
             //
@@ -409,7 +414,6 @@ const screenControl = (() => {
       playerTwoScore.appendChild(player2Button);
     };
   })();
-  
-  
+
   // return {  boardDiv, board, renderDivs};
 })();
